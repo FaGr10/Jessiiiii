@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Yanetzy, mi San Valentín!</title>
+    <style>
+        /* Fondo rosado y estilos generales */
+        body {
+            font-family: 'Pacifico', cursive;
+            background-color: #ffcccb; /* Fondo rosado claro */
+            color: #8b0000; /* Color de texto rojo oscuro */
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Estilo del mensaje */
+        h1 {
+            font-size: 3em;
+            margin-top: 5%;
+        }
+
+        /* Corazón */
+        .corazon {
+            font-size: 4em;
+            color: #ff1493; /* Color rosa fuerte */
+            animation: latido 1.5s infinite;
+            display: none; /* Oculto por defecto */
+        }
+
+        /* Animación de latido */
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Botones */
+        .botones {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .boton {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: 'Pacifico', cursive;
+            background-color: #ff1493;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .boton:hover {
+            background-color: #ff69b4;
+        }
+
+        /* Ajuste específico para el botón "No" */
+        #noBtn {
+            margin-top: 90px; /* Ajuste del valor para mover el botón "No" hacia abajo */
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+
+        /* Mensaje de celebración */
+        .celebración {
+            display: none;
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #8b0000;
+        }
+
+        /* Estilo para la imagen del Gato con Botas */
+        .gato-botas {
+            width: 200px; /* Tamaño más pequeño */
+            margin-top: 20px;
+            margin-bottom: 20px;
+            animation: ojitos 3s infinite;
+        }
+
+        @keyframes ojitos {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Añadir corazones flotantes */
+        .corazon-flotante {
+            position: absolute;
+            color: #ff1493;
+            font-size: 2em;
+            animation: flotar 5s infinite;
+        }
+
+        @keyframes flotar {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Diseño responsivo */
+        @media only screen and (max-width: 600px) {
+            h1 {
+                font-size: 2em; /* Tamaño de fuente más pequeño para pantallas pequeñas */
+            }
+
+            .boton {
+                margin-bottom: 10px;
+                padding: 10px 20px; /* Botones más pequeños para pantallas pequeñas */
+                font-size: 1em; /* Tamaño de fuente más pequeño para botones */
+            }
+
+            .celebración {
+                font-size: 1.2em; /* Tamaño de fuente más pequeño para el mensaje de celebración */
+            }
+
+            .gato-botas {
+                width: 150px; /* Imagen más pequeña para pantallas pequeñas */
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"> <!-- Fuente linda -->
+</head>
+<body>
+    <!-- Imagen del Gato con Botas -->
+    <img src="https://media.giphy.com/media/Q6WPVzFU8LcBWWgQE1/giphy.gif" alt="Gato con Botas ojitos dulces" class="gato-botas">
+
+    <h1>Yanetzy, ¿puedo ser tu San Valentín?</h1>
+
+    <!-- Botones reorganizados -->
+    <div class="botones">
+        <button class="boton" id="siBtn">¡Sí!🥰</button>
+        <button class="boton" id="noBtn">No🤨</button>
+    </div>
+
+    <!-- Corazón palpitante -->
+    <div class="corazon" id="corazon">❤️</div>
+
+    <!-- Mensaje de celebración -->
+    <div class="celebración" id="celebracion">
+        ¡Será el mejor San Valentín que tendrás! Si aceptaste, notifícale a tu novio, él se encargará de darte los detalles de cuándo y dónde se llevará a cabo su cita. ¡Te quiero! 💖
+    </div>
+
+    <!-- Corazones flotantes -->
+    <div class="corazon-flotante" style="top: 10%; left: 20%;">💖</div>
+    <div class="corazon-flotante" style="top: 40%; left: 60%;">💝</div>
+    <div class="corazon-flotante" style="top: 70%; left: 30%;">💓</div>
+
+    <script>
+        // Función para el botón "Sí"
+        document.getElementById("siBtn").addEventListener("click", function() {
+            // Mostrar el mensaje de celebración
+            document.getElementById("celebracion").style.display = "block";
+            // Mostrar el corazón palpitante
+            document.getElementById("corazon").style.display = "block";
+            // Ocultar los botones
+            document.getElementById("siBtn").style.display = "none";
+            document.getElementById("noBtn").style.display = "none";
+        });
+
+        // Función para el botón "No"
+        document.getElementById("noBtn").addEventListener("mouseover", function() {
+            // Mover el botón "No" a una posición aleatoria
+            const noBtn = document.getElementById("noBtn");
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        });
+    </script>
+</body>
+</html>
