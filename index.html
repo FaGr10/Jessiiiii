@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jessi, mi flaca linda</title>
+    <title>Jessi, ¿puedo ser tu San Valentín?</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         body {
@@ -16,7 +16,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Cambiado para dar aire arriba */
+            justify-content: center;
             min-height: 100vh;
             overflow: hidden;
             touch-action: manipulation;
@@ -24,14 +24,8 @@
 
         .contenedor {
             width: 90%;
-            margin-top: 50px;
-            z-index: 1000; /* Texto y GIF siempre visibles */
+            z-index: 1000;
             position: relative;
-            pointer-events: none; /* Permite tocar botones detrás del contenedor si es necesario */
-        }
-
-        .contenedor h1, .contenedor img {
-            pointer-events: auto; /* Pero el GIF y texto sí reaccionan */
         }
 
         img {
@@ -42,8 +36,16 @@
 
         h1 {
             font-size: 1.4em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 5px rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+        }
+
+        /* Contenedor para alinear los botones inicialmente */
+        .area-botones {
+            display: flex;
+            flex-direction: column; /* Uno debajo del otro */
+            align-items: center;
+            gap: 15px;
+            position: relative;
         }
 
         #siBtn {
@@ -57,27 +59,33 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 9999;
-            position: relative;
-            pointer-events: auto;
+            transition: transform 0.2s ease;
         }
 
-        .no-clon, #noBtnOriginal {
-            padding: 8px 15px; /* Más pequeños para no tapar todo */
+        #noBtnOriginal {
+            display: none; /* Se activa en la etapa 1 */
+            padding: 10px 20px;
+            font-family: 'Pacifico', cursive;
+            font-size: 1em;
+            background-color: #808080;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        .no-clon {
+            padding: 8px 15px;
             font-family: 'Pacifico', cursive;
             font-size: 0.9em;
             background-color: #808080;
             color: white;
             border: none;
             border-radius: 50px;
-            position: absolute;
+            position: fixed; /* Los clones sí son libres desde el inicio */
             z-index: 10;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-
-        #noBtnOriginal {
-            display: none;
-            top: 60%; /* Posición inicial lejos del texto */
         }
 
         .corazon-bg {
@@ -100,10 +108,12 @@
     <div class="contenedor">
         <img id="gifMain" src="https://media.giphy.com/media/EOpZ7XsVfTN2E/giphy.gif" alt="Minion">
         <h1 id="textoMensaje">Jessi, tengo algo que preguntarte...</h1>
-        <button id="siBtn">¡Cuéntame! 🤔</button>
+        
+        <div class="area-botones">
+            <button id="siBtn">¡Cuéntame! 🤔</button>
+            <button id="noBtnOriginal">No, feo 🤨</button>
+        </div>
     </div>
-
-    <button id="noBtnOriginal">No, feo 🤨</button>
 
     <script>
         const gifMain = document.getElementById('gifMain');
@@ -115,21 +125,16 @@
         let siScale = 1;
 
         function moverBotonLejos(boton) {
-            // Evitamos la zona central (donde está el texto y el botón SI)
-            // Calculamos posiciones que tiendan a irse a los bordes
-            let newX, newY;
-            const margin = 20;
+            // Rango para que se mueva por toda la pantalla
+            const margin = 50;
+            let newX = Math.random() * (window.innerWidth - boton.offsetWidth - margin);
+            let newY = Math.random() * (window.innerHeight - boton.offsetHeight - margin);
 
-            // Decidir si va a la mitad superior o inferior, izquierda o derecha
-            newX = Math.random() < 0.5 ? 
-                   Math.random() * 30 : // Lado izquierdo (0-30%)
-                   Math.random() * 30 + 70; // Lado derecho (70-100%)
-            
-            newY = Math.random() * 80 + 10; // Cualquier altura
-
+            // Forzar que el primer movimiento lo saque del flujo normal
             boton.style.position = "fixed";
-            boton.style.left = `${newX}vw`;
-            boton.style.top = `${newY}vh`;
+            boton.style.left = `${newX}px`;
+            boton.style.top = `${newY}px`;
+            boton.style.margin = "0"; // Quitar márgenes de alineación
         }
 
         function crearClonNo() {
@@ -137,11 +142,16 @@
             nuevoNo.innerText = "No, feo 🤨";
             nuevoNo.classList.add('no-clon');
             
-            moverBotonLejos(nuevoNo);
+            // Aparecen en posiciones aleatorias lejos del centro
+            nuevoNo.style.left = (Math.random() * 80 + 10) + "vw";
+            nuevoNo.style.top = (Math.random() * 80 + 10) + "vh";
 
             const accionHuir = (e) => {
                 e.preventDefault();
-                huirYClonar(nuevoNo);
+                moverBotonLejos(nuevoNo);
+                siScale += 0.2;
+                siBtn.style.transform = `scale(${siScale})`;
+                crearClonNo();
             };
 
             nuevoNo.addEventListener('touchstart', accionHuir);
@@ -150,23 +160,13 @@
             document.body.appendChild(nuevoNo);
         }
 
-        function huirYClonar(boton) {
-            if (etapa === 1) {
-                moverBotonLejos(boton);
-                siScale += 0.25; // Crece un poco más lento para no tapar todo tan rápido
-                siBtn.style.transform = `scale(${siScale})`;
-                crearClonNo();
-            }
-        }
-
         siBtn.addEventListener('click', () => {
             if (etapa === 0) {
                 etapa = 1;
                 gifMain.src = "https://media.giphy.com/media/lCP95tGSbMmWI/giphy.gif";
                 textoMensaje.innerText = "¿Jessi, puedo ser tu San Valentín?";
                 siBtn.innerText = "Si, mi negro♥️";
-                noBtnOriginal.style.display = "block";
-                moverBotonLejos(noBtnOriginal);
+                noBtnOriginal.style.display = "block"; // Aparece justo debajo por el CSS
             } else if (etapa === 1) {
                 etapa = 2;
                 gifMain.src = "https://media.giphy.com/media/mPOGx4hJtOWSA/giphy.gif";
@@ -179,12 +179,16 @@
 
         const accionHuirOriginal = (e) => {
             e.preventDefault();
-            huirYClonar(noBtnOriginal);
+            moverBotonLejos(noBtnOriginal); // Al tocarlo, "se escapa" y se vuelve flotante
+            siScale += 0.2;
+            siBtn.style.transform = `scale(${siScale})`;
+            crearClonNo();
         };
 
         noBtnOriginal.addEventListener('touchstart', accionHuirOriginal);
         noBtnOriginal.addEventListener('mouseover', accionHuirOriginal);
 
+        // Lluvia de corazones
         setInterval(() => {
             const c = document.createElement('div');
             c.classList.add('corazon-bg');
@@ -197,4 +201,3 @@
     </script>
 </body>
 </html>
-
