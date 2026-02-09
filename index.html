@@ -3,178 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Jessi, mi San Valentín!</title>
+    <title>Jessi, ¿puedo ser tu San Valentín?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        /* Fondo rosado y estilos generales */
         body {
             font-family: 'Pacifico', cursive;
-            background-color: #ffcccb; /* Fondo rosado claro */
-            color: #8b0000; /* Color de texto rojo oscuro */
+            background-color: #ffcccb;
+            color: #8b0000;
             text-align: center;
-            padding: 50px;
             margin: 0;
-            overflow: hidden;
-        }
-
-        /* Estilo del mensaje */
-        h1 {
-            font-size: 3em;
-            margin-top: 5%;
-        }
-
-        /* Corazón */
-        .corazon {
-            font-size: 4em;
-            color: #ff1493; /* Color rosa fuerte */
-            animation: latido 1.5s infinite;
-            display: none; /* Oculto por defecto */
-        }
-
-        /* Animación de latido */
-        @keyframes latido {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Botones */
-        .botones {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 50%;
-            margin: 0 auto;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
 
-        .boton {
+        .contenedor {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        img {
+            width: 280px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            height: 80px; /* Espacio fijo para el texto */
+        }
+
+        .botones {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            position: relative;
+            height: 100px;
+        }
+
+        button {
             padding: 15px 30px;
-            font-size: 1.2em;
             font-family: 'Pacifico', cursive;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        #siBtn {
             background-color: #ff1493;
             color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            z-index: 100;
         }
 
-        .boton:hover {
-            background-color: #ff69b4;
-        }
-
-        /* Ajuste específico para el botón "No" */
         #noBtn {
-            margin-top: 90px; /* Ajuste del valor para mover el botón "No" hacia abajo */
+            background-color: #808080;
+            color: white;
             position: absolute;
-            transition: all 0.5s ease;
         }
 
-        /* Mensaje de celebración */
-        .celebración {
+        .oculto {
             display: none;
-            font-size: 1.5em;
-            margin-top: 20px;
-            color: #8b0000;
         }
 
-        /* Estilo para la imagen del Gato con Botas */
-        .gato-botas {
-            width: 200px; /* Tamaño más pequeño */
-            margin-top: 20px;
-            margin-bottom: 20px;
-            animation: ojitos 3s infinite;
-        }
-
-        @keyframes ojitos {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Añadir corazones flotantes */
-        .corazon-flotante {
+        /* Corazones flotantes de fondo */
+        .corazon-bg {
             position: absolute;
-            color: #ff1493;
+            color: rgba(255, 20, 147, 0.2);
             font-size: 2em;
-            animation: flotar 5s infinite;
+            z-index: -1;
+            animation: flotar 5s infinite ease-in;
         }
 
         @keyframes flotar {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0); }
-        }
-
-        /* Diseño responsivo */
-        @media only screen and (max-width: 600px) {
-            h1 {
-                font-size: 2em; /* Tamaño de fuente más pequeño para pantallas pequeñas */
-            }
-
-            .boton {
-                margin-bottom: 10px;
-                padding: 10px 20px; /* Botones más pequeños para pantallas pequeñas */
-                font-size: 1em; /* Tamaño de fuente más pequeño para botones */
-            }
-
-            .celebración {
-                font-size: 1.2em; /* Tamaño de fuente más pequeño para el mensaje de celebración */
-            }
-
-            .gato-botas {
-                width: 150px; /* Imagen más pequeña para pantallas pequeñas */
-            }
+            0% { transform: translateY(100vh); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"> <!-- Fuente linda -->
 </head>
 <body>
-    <!-- Imagen del Gato con Botas -->
-    <img src="https://media.giphy.com/media/Q6WPVzFU8LcBWWgQE1/giphy.gif" alt="Gato con Botas ojitos dulces" class="gato-botas">
 
-    <h1>Jessi, ¿puedo ser tu San Valentín?</h1>
+    <div class="contenedor">
+        <img id="gifMain" src="https://media.giphy.com/media/EOpZ7XsVfTN2E/giphy.gif" alt="Minion pensando">
+        
+        <h1 id="textoMensaje">Jessi, tengo algo que preguntarte...</h1>
 
-    <!-- Botones reorganizados -->
-    <div class="botones">
-        <button class="boton" id="siBtn">¡Sí!🥰</button>
-        <button class="boton" id="noBtn">No🤨</button>
+        <div class="botones" id="bloqueBotones">
+            <button id="siBtn">¡Sí! 🥰</button>
+            <button id="noBtn">No 🤨</button>
+        </div>
     </div>
-
-    <!-- Corazón palpitante -->
-    <div class="corazon" id="corazon">❤️</div>
-
-    <!-- Mensaje de celebración -->
-    <div class="celebración" id="celebracion">
-        ¡Será el mejor San Valentín que tendrás! Si aceptaste, notifícale a tu novio, él se encargará de darte los detalles de cuándo y dónde se llevará a cabo su cita. ¡Te quiero! 💖
-    </div>
-
-    <!-- Corazones flotantes -->
-    <div class="corazon-flotante" style="top: 10%; left: 20%;">💖</div>
-    <div class="corazon-flotante" style="top: 40%; left: 60%;">💝</div>
-    <div class="corazon-flotante" style="top: 70%; left: 30%;">💓</div>
 
     <script>
-        // Función para el botón "Sí"
-        document.getElementById("siBtn").addEventListener("click", function() {
-            // Mostrar el mensaje de celebración
-            document.getElementById("celebracion").style.display = "block";
-            // Mostrar el corazón palpitante
-            document.getElementById("corazon").style.display = "block";
-            // Ocultar los botones
-            document.getElementById("siBtn").style.display = "none";
-            document.getElementById("noBtn").style.display = "none";
+        const gifMain = document.getElementById('gifMain');
+        const textoMensaje = document.getElementById('textoMensaje');
+        const siBtn = document.getElementById('siBtn');
+        const noBtn = document.getElementById('noBtn');
+        
+        let etapa = 0; // 0: Introducción, 1: Pregunta, 2: Final
+        let siScale = 1;
+
+        // Acción al hacer clic en el botón de SI
+        siBtn.addEventListener('click', () => {
+            if (etapa === 0) {
+                // Pasar de intro a pregunta
+                etapa = 1;
+                gifMain.src = "https://media.giphy.com/media/lCP95tGSbMmWI/giphy.gif";
+                textoMensaje.innerText = "¿Jessi, puedo ser tu San Valentín?";
+                siBtn.innerText = "¡Claro que sí! ❤️";
+            } else if (etapa === 1) {
+                // Final feliz
+                etapa = 2;
+                gifMain.src = "https://media.giphy.com/media/mPOGx4hJtOWSA/giphy.gif";
+                textoMensaje.innerText = "¡Será el mejor San Valentín! Avísale a tu novio, él ya tiene todo planeado. ¡Te quiero! 💖";
+                document.getElementById('bloqueBotones').classList.add('oculto');
+            }
         });
 
-        // Función para el botón "No"
-        document.getElementById("noBtn").addEventListener("mouseover", function() {
-            // Mover el botón "No" a una posición aleatoria
-            const noBtn = document.getElementById("noBtn");
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
-        });
+        // Hacer que el botón de NO escape y que el de SI crezca
+        const huir = () => {
+            if (etapa === 1) { // Solo escapa cuando ya está la pregunta real
+                // El NO se mueve
+                const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+                const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+
+                // El SI crece cada vez que ella intenta dar al NO
+                siScale += 0.4;
+                siBtn.style.transform = `scale(${siScale})`;
+            }
+        };
+
+        noBtn.addEventListener('mouseover', huir);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); huir(); });
+
+        // Corazones de fondo decorativos
+        setInterval(() => {
+            const c = document.createElement('div');
+            c.classList.add('corazon-bg');
+            c.innerText = '❤️';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 5000);
+        }, 600);
     </script>
 </body>
 </html>
-
