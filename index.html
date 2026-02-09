@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jessi, ¿puedo ser tu San Valentín?</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
@@ -12,73 +12,71 @@
             color: #8b0000;
             text-align: center;
             margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             overflow: hidden;
+            touch-action: manipulation; /* Evita zooms raros en móviles */
         }
 
         .contenedor {
             width: 90%;
-            max-width: 600px;
-            padding: 20px;
             z-index: 100;
         }
 
         img {
-            width: 280px;
+            width: 220px; /* Un poco más pequeño para que quepa bien en el móvil */
             border-radius: 15px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         h1 {
-            font-size: 1.8em;
-            min-height: 60px;
-            margin-bottom: 30px;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding: 0 10px;
         }
 
         .botones {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             position: relative;
-            min-height: 150px;
+            min-height: 120px;
         }
 
         button {
-            padding: 15px 30px;
+            padding: 12px 20px;
             font-family: 'Pacifico', cursive;
-            font-size: 1.2em;
+            font-size: 1.1em;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s ease;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             white-space: nowrap;
+            -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en móvil */
         }
 
         #siBtn {
             background-color: #ff1493;
             color: white;
-            z-index: 9999; /* El botón de SI siempre estará arriba de todo */
+            z-index: 9999;
+            position: relative;
         }
 
-        /* Clase para los clones que aparecerán */
-        .no-clon {
+        .no-clon, #noBtnOriginal {
             background-color: #808080;
             color: white;
             position: absolute;
-            z-index: 10;
+            z-index: 50;
+            transition: all 0.2s ease;
         }
 
         #noBtnOriginal {
-            background-color: #808080;
-            color: white;
-            display: none; /* Se oculta al inicio */
+            display: none;
         }
 
         .corazon-bg {
@@ -102,7 +100,7 @@
         <img id="gifMain" src="https://media.giphy.com/media/EOpZ7XsVfTN2E/giphy.gif" alt="Minion">
         <h1 id="textoMensaje">Jessi, tengo algo que preguntarte...</h1>
 
-        <div class="botones" id="areaBotones">
+        <div class="botones">
             <button id="siBtn">¡Cuéntame! 🤔</button>
             <button id="noBtnOriginal">No, feo 🤨</button>
         </div>
@@ -117,72 +115,76 @@
         let etapa = 0; 
         let siScale = 1;
 
-        // Función para crear botones "No, feo" extra
+        function moverBotonCerca(boton) {
+            const rango = 150; // Rango más corto para pantallas de móvil
+            const rect = boton.getBoundingClientRect();
+            
+            let newX = rect.left + (Math.random() - 0.5) * rango * 2;
+            let newY = rect.top + (Math.random() - 0.5) * rango * 2;
+
+            // Ajuste para que no se pierda fuera de la pantalla del celular
+            newX = Math.max(20, Math.min(newX, window.innerWidth - rect.width - 20));
+            newY = Math.max(20, Math.min(newY, window.innerHeight - rect.height - 20));
+
+            boton.style.position = "fixed";
+            boton.style.left = `${newX}px`;
+            boton.style.top = `${newY}px`;
+        }
+
         function crearClonNo() {
             const nuevoNo = document.createElement('button');
             nuevoNo.innerText = "No, feo 🤨";
             nuevoNo.classList.add('no-clon');
             
-            // Posición aleatoria en toda la pantalla
-            const x = Math.random() * (window.innerWidth - 150);
-            const y = Math.random() * (window.innerHeight - 50);
-            
-            nuevoNo.style.left = `${x}px`;
-            nuevoNo.style.top = `${y}px`;
+            nuevoNo.style.left = (Math.random() * 50 + 25) + "%";
+            nuevoNo.style.top = (Math.random() * 50 + 25) + "%";
 
-            // Hacer que cada clon también se mueva y cree más al tocarlo
-            nuevoNo.addEventListener('mouseover', () => huirYClonar(nuevoNo));
-            nuevoNo.addEventListener('touchstart', (e) => { e.preventDefault(); huirYClonar(nuevoNo); });
+            const accionHuir = (e) => {
+                e.preventDefault();
+                huirYClonar(nuevoNo);
+            };
+
+            nuevoNo.addEventListener('touchstart', accionHuir);
+            nuevoNo.addEventListener('mouseover', accionHuir);
 
             document.body.appendChild(nuevoNo);
         }
 
         function huirYClonar(boton) {
             if (etapa === 1) {
-                // Mover el botón actual
-                const x = Math.random() * (window.innerWidth - boton.offsetWidth - 50);
-                const y = Math.random() * (window.innerHeight - boton.offsetHeight - 50);
-                boton.style.position = "absolute";
-                boton.style.left = `${x}px`;
-                boton.style.top = `${y}px`;
-
-                // Hacer crecer el botón SI de forma notable
-                siScale += 0.4;
+                moverBotonCerca(boton);
+                siScale += 0.3;
                 siBtn.style.transform = `scale(${siScale})`;
-
-                // CREA 2 CLONES NUEVOS CADA VEZ (Para llenar la pantalla rápido)
-                crearClonNo();
                 crearClonNo();
             }
         }
 
-        siBtn.addEventListener('click', () => {
+        siBtn.addEventListener('click', (e) => {
             if (etapa === 0) {
-                // PRIMER CLIC: Pasar a la pregunta
                 etapa = 1;
                 gifMain.src = "https://media.giphy.com/media/lCP95tGSbMmWI/giphy.gif";
                 textoMensaje.innerText = "¿Jessi, puedo ser tu San Valentín?";
                 siBtn.innerText = "Si, mi negro♥️";
                 noBtnOriginal.style.display = "block";
+                noBtnOriginal.style.position = "static";
             } else if (etapa === 1) {
-                // SEGUNDO CLIC: Final feliz
                 etapa = 2;
                 gifMain.src = "https://media.giphy.com/media/mPOGx4hJtOWSA/giphy.gif";
                 textoMensaje.innerText = "¡Será el mejor San Valentín!";
-                
-                // Ocultar todo lo demás
                 siBtn.style.display = "none";
                 noBtnOriginal.style.display = "none";
-                const clones = document.querySelectorAll('.no-clon');
-                clones.forEach(c => c.remove());
+                document.querySelectorAll('.no-clon').forEach(c => c.remove());
             }
         });
 
-        // Eventos para el botón NO original
-        noBtnOriginal.addEventListener('mouseover', () => huirYClonar(noBtnOriginal));
-        noBtnOriginal.addEventListener('touchstart', (e) => { e.preventDefault(); huirYClonar(noBtnOriginal); });
+        const accionHuirOriginal = (e) => {
+            e.preventDefault();
+            huirYClonar(noBtnOriginal);
+        };
 
-        // Lluvia constante de corazones decorativos
+        noBtnOriginal.addEventListener('touchstart', accionHuirOriginal);
+        noBtnOriginal.addEventListener('mouseover', accionHuirOriginal);
+
         setInterval(() => {
             const c = document.createElement('div');
             c.classList.add('corazon-bg');
